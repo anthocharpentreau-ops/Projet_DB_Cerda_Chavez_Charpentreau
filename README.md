@@ -8,7 +8,7 @@ D’abord, établis les règles de gestions des données de ta compagnie, sous l
 Ensuite, à partir de ces règles, fournis un dictionnaire de données brutes avec les colonnes suivantes, regroupées dans un tableau : signification de la donnée, type, taille en nombre de caractères ou de chiffres. Il doit y avoir entre 25 et 35 données. Il sert à fournir des informations supplémentaires sur chaque donnée (taille et type) mais sans a priori sur comment les données vont être modélisées ensuite.
 Fournis donc les règles de gestion et le dictionnaire de données.
 
-Réponse de Claude (IA):
+RÉPONSE CLAUDE (IA):
 # Analyse des besoins : compagnie aérienne (démarche MERISE)
 
 ## Partie 1 : Règles de gestion
@@ -27,7 +27,6 @@ Réponse de Claude (IA):
 - Un vol est une liaison commerciale régulière, identifiée par un numéro de vol (par exemple AF218). Il relie un aéroport de départ à un aéroport d'arrivée, toujours les mêmes.
 - Un même numéro de vol est exploité plusieurs jours ou plusieurs fois par semaine. Chaque exploitation à une date donnée est une « opération de vol ». C'est elle qui est effectuée concrètement, avec un avion, un équipage et des passagers.
 - Pour chaque opération de vol, on enregistre la date et l'heure de départ et d'arrivée prévues, puis les heures réelles une fois le vol effectué. Toutes ces heures sont en heure locale de l'aéroport concerné.
-- Une fois le vol terminé, on conserve sa durée de vol, calculée en tenant compte des fuseaux horaires.
 - Chaque opération de vol est effectuée par un seul avion. Un avion enchaîne plusieurs opérations dans le temps, mais jamais deux en même temps.
 - Une opération de vol a un statut : programmé, embarquement, en vol, arrivé, retardé ou annulé. En cas de retard ou d'annulation, on note le motif.
 - On veut connaître, pour chaque opération de vol, le nombre de passagers embarqués. Il ne peut pas dépasser le nombre de sièges du modèle de l'avion.
@@ -62,24 +61,27 @@ Réponse de Claude (IA):
 | 12 | Date et heure d'arrivée prévues (heure locale) | Date-heure | 12 (AAAAMMJJHHMM) |
 | 13 | Date et heure de départ réelles (heure locale) | Date-heure | 12 (AAAAMMJJHHMM) |
 | 14 | Date et heure d'arrivée réelles (heure locale) | Date-heure | 12 (AAAAMMJJHHMM) |
-| 15 | Durée de vol (en minutes) | Numérique | 4 |
-| 16 | Nombre de passagers embarqués | Numérique | 3 |
-| 17 | Statut du vol (programmé, embarquement, en vol, arrivé, retardé, annulé) | Alphabétique | 12 |
-| 18 | Motif du retard ou de l'annulation | Alphanumérique | 100 |
-| 19 | Matricule du membre d'équipage | Alphanumérique | 8 |
-| 20 | Nom du membre d'équipage | Alphabétique | 30 |
-| 21 | Prénom du membre d'équipage | Alphabétique | 30 |
-| 22 | Fonction du membre d'équipage (commandant, copilote, cabine) | Alphabétique | 15 |
-| 23 | Numéro de licence du pilote | Alphanumérique | 15 |
-| 24 | Numéro de passeport ou de pièce d'identité du passager | Alphanumérique | 15 |
-| 25 | Nom du passager | Alphabétique | 30 |
-| 26 | Prénom du passager | Alphabétique | 30 |
-| 27 | Code de réservation | Alphanumérique | 6 |
-| 28 | Numéro de billet | Numérique | 13 |
-| 29 | Classe de voyage (Economy, Premium Economy, Business, First) | Alphabétique | 15 |
-| 30 | Numéro de siège attribué (ex. 34K) | Alphanumérique | 4 |
+| 15 | Nombre de passagers embarqués | Numérique | 3 |
+| 16 | Statut du vol (programmé, embarquement, en vol, arrivé, retardé, annulé) | Alphabétique | 12 |
+| 17 | Motif du retard ou de l'annulation | Alphanumérique | 100 |
+| 18 | Matricule du membre d'équipage | Alphanumérique | 8 |
+| 19 | Nom du membre d'équipage | Alphabétique | 30 |
+| 20 | Prénom du membre d'équipage | Alphabétique | 30 |
+| 21 | Fonction du membre d'équipage (commandant, copilote, cabine) | Alphabétique | 15 |
+| 22 | Numéro de licence du pilote | Alphanumérique | 15 |
+| 23 | Numéro de passeport ou de pièce d'identité du passager | Alphanumérique | 15 |
+| 24 | Nom du passager | Alphabétique | 30 |
+| 25 | Prénom du passager | Alphabétique | 30 |
+| 26 | Code de réservation | Alphanumérique | 6 |
+| 27 | Numéro de billet | Numérique | 13 |
+| 28 | Classe de voyage (Economy, Premium Economy, Business, First) | Alphabétique | 15 |
+| 29 | Numéro de siège attribué (ex. 34K) | Alphanumérique | 4 |
 
 **Remarques pour l'étudiant :**
 - La taille indiquée est un maximum. Les dates sont au format AAAAMMJJ et les heures au format HHMM.
 - La durée de vol et le nombre de passagers embarqués apparaissent ici parce que la compagnie souhaite les consulter. Ils peuvent se déduire d'autres données (heures réelles et fuseaux, billets enregistrés). À toi de décider, lors de la modélisation, de les conserver ou de les calculer.
 - Les règles de gestion et le dictionnaire couvrent le même périmètre. Si tu as besoin d'informations supplémentaires, n'hésite pas à me les demander.
+
+IMAGE MCD:
+<img width="1387" height="663" alt="Capture d’écran 2026-09-29 à 11 49 21" src="https://github.com/user-attachments/assets/38ac54c8-53b6-40aa-be85-a31693505c57" />
+
