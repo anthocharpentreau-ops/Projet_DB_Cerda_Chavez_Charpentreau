@@ -105,6 +105,8 @@ Aeroport = (Code_IATA снаяз), NomvARCHARso) #code_postat);
 
 Vol = (Numéro de VOlVARCHARSO), Date
 depart_prevue DATETIME, Date_d_arrivé_prevue DATETIME, Date_depart_reelle DATETINE, Date_d_arrive_reelle DATETIME, Statut VARCHAR(50), Motif_du_retard VARCHAR(50),#Immatriculation_d_avion);
+
 Effectue = (#Numéro_de_vol. #Matricule. #Passeport);
+
 Voyage = (#Code_IATA. #Numéro_de_vol, Role vARcHAR(50));
 
