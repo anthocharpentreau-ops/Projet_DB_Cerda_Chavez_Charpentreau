@@ -142,3 +142,150 @@ Cohérence à respecter :
 - Les avions retirés ne volent pas.
 - Prévois quelques vols retardés et annulés, avec leur motif.
 
+## Scénario d'utilisation
+
+**Qui utilise la base ?** La responsable des opérations de la compagnie aérienne.
+
+**Pour quoi faire ?** Elle prépare le bilan des vols du 20 octobre au 7 novembre 2026 pour la direction. Elle a besoin de savoir quels vols ont posé problème, comment la flotte d'avions est utilisée, qui compose les équipages et quels passagers sont à recontacter.
+
+Elle extrait les données suivantes, dans l'ordre des requêtes du fichier `4_interrogation.sql` :
+
+**A. Premières recherches (projections et sélections)**
+
+| N° | Donnée recherchée | Notions SQL |
+|---|---|---|
+| A1 | Les vols retardés ou annulés et leur motif | `IN`, `ORDER BY` |
+| A2 | Les pays desservis par la compagnie | `DISTINCT` |
+| A3 | Les vols de la semaine du 26 octobre au 1er novembre | `BETWEEN` |
+| A4 | Les avions Airbus qui ne sont pas en service | `LIKE` |
+| A5 | Les clients Business ou First qui n'ont pas embarqué | `IN`, `AND` |
+
+**B. Statistiques (fonctions d'agrégation)**
+
+| N° | Donnée recherchée | Notions SQL |
+|---|---|---|
+| B1 | Le nombre de vols arrivés, retardés et annulés | `COUNT`, `GROUP BY` |
+| B2 | Les avions qui ont fait au moins 2 vols | `COUNT`, `GROUP BY`, `HAVING` |
+| B3 | Les modèles présents à au moins 3 exemplaires dans la flotte | `COUNT`, `GROUP BY`, `HAVING` |
+| B4 | Le nombre de billets vendus par classe | `COUNT`, `GROUP BY` |
+| B5 | Le total et la moyenne de sièges des avions selon leur état | `SUM`, `AVG`, `GROUP BY`, `HAVING` |
+
+**C. Croiser les informations (jointures)**
+
+| N° | Donnée recherchée | Notions SQL |
+|---|---|---|
+| C1 | L'aéroport de départ de chaque vol | jointure interne |
+| C2 | Le modèle d'avion et le nombre de sièges de chaque vol | jointure sur 3 tables |
+| C3 | Le nombre de vols de chaque avion, même ceux qui n'ont pas volé | `LEFT JOIN` (jointure externe) |
+| C4 | Le responsable de chaque membre d'équipage | auto-jointure |
+| C5 | L'équipage du vol AF0006 | jointure, `DISTINCT` |
+
+**D. Questions plus précises (requêtes imbriquées)**
+
+| N° | Donnée recherchée | Notions SQL |
+|---|---|---|
+| D1 | Les passagers qui ont un billet mais qui n'ont pas volé (à rembourser) | `IN`, `NOT IN` |
+| D2 | Les avions qui ont eu au moins un vol retardé | `EXISTS` |
+| D3 | Les avions en service qui n'ont pas volé (disponibles en cas de panne) | `NOT EXISTS` |
+| D4 | Le modèle d'avion qui a le plus de sièges | `ALL` |
+| D5 | Les modèles Airbus plus grands qu'au moins un modèle Boeing | `ANY` |
+
+Enfin, pour la maintenance, elle cherche **les avions de plus de 250 sièges qui ont eu un vol retardé**. C'est la requête dont les plans d'exécution sont étudiés ci-dessous.
+
+## Étude des plans d'exécution
+
+### Requête étudiée
+
+> Immatriculation et modèle des avions **gros-porteurs (plus de 250 sièges)** ayant effectué au moins un **vol retardé**.
+
+En algèbre relationnelle, elle utilise trois opérateurs différents : la **sélection σ**, la **jointure ⋈** et la **projection π**.
+
+π<sub>Immatriculation, nom_modèle</sub> ( σ<sub>Statut='Retardé' ∧ nombre_de_siège>250</sub> ( Vol ⋈ Avion ⋈ Modèle ) )
+
+### Cardinalités (mesurées sur la base remplie)
+
+| Relation / résultat intermédiaire | Lignes |
+|---|---|
+| Vol | 53 |
+| Avion | 44 |
+| Modèle | 12 |
+| σ<sub>Statut='Retardé'</sub>(Vol) | 7 |
+| σ<sub>sièges>250</sub>(Modèle) | 4 |
+| Vol ⋈ Avion | 53 |
+| Vol ⋈ Avion ⋈ Modèle | 53 |
+| Avion ⋈ σ<sub>sièges>250</sub>(Modèle) | 26 |
+| σ<sub>Statut</sub>(Vol) ⋈ Avion | 7 |
+| Résultat final | 4 |
+
+### Modèle de coût utilisé
+
+- **Sélection** σ sur une relation de *n* lignes : *n* instructions (chaque ligne est testée une fois).
+- **Produit cartésien / jointure** par boucles imbriquées entre *n* et *m* lignes : *n × m* instructions (chaque couple est comparé).
+- **Projection** π sur *n* lignes : *n* instructions.
+
+### Plan A : plan canonique (produits cartésiens, puis sélection, puis projection)
+
+C'est la traduction directe de la requête : on combine toutes les tables, puis on filtre.
+<img width="894" height="1174" alt="image" src="https://github.com/user-attachments/assets/4acdea33-75f4-446b-8305-278c183453a9" />
+
+| Étape | Calcul | Instructions |
+|---|---|---|
+| Vol × Avion | 53 × 44 | 2 332 |
+| (Vol × Avion) × Modèle | 2 332 × 12 | 27 984 |
+| σ (conditions de jointure + filtres) | 27 984 | 27 984 |
+| π | 4 | 4 |
+| **Total** | | **58 304** |
+
+### Plan B : jointures d'abord, sélections ensuite
+
+<img width="894" height="1174" alt="image" src="https://github.com/user-attachments/assets/93b56d97-24e8-41e2-8ee8-b7f95ad3fe4f" />
+
+| Étape | Calcul | Instructions |
+|---|---|---|
+| Vol ⋈ Avion | 53 × 44 | 2 332 |
+| (Vol ⋈ Avion) ⋈ Modèle | 53 × 12 | 636 |
+| σ Statut ∧ sièges | 53 | 53 |
+| π | 4 | 4 |
+| **Total** | | **3 025** |
+
+### Plan C : sélections descendues au plus près des tables (Vol ⋈ Avion d'abord)
+
+<img width="1308" height="1274" alt="image" src="https://github.com/user-attachments/assets/64f03a95-a143-4c49-969b-0ca587f5f206" />
+
+| Étape | Calcul | Instructions |
+|---|---|---|
+| σ Statut='Retardé' (Vol) | 53 | 53 |
+| σ sièges>250 (Modèle) | 12 | 12 |
+| σ(Vol) ⋈ Avion | 7 × 44 | 308 |
+| (…) ⋈ σ(Modèle) | 7 × 4 | 28 |
+| π | 4 | 4 |
+| **Total** | | **405** |
+
+### Plan D : sélections descendues, mais Avion ⋈ Modèle d'abord
+
+<img width="1308" height="1274" alt="image" src="https://github.com/user-attachments/assets/374d3840-ab6e-41ed-8214-c3d6fcf525ca" />
+
+| Étape | Calcul | Instructions |
+|---|---|---|
+| σ sièges>250 (Modèle) | 12 | 12 |
+| Avion ⋈ σ(Modèle) | 44 × 4 | 176 |
+| σ Statut='Retardé' (Vol) | 53 | 53 |
+| σ(Vol) ⋈ (Avion ⋈ σ(Modèle)) | 7 × 26 | 182 |
+| π | 4 | 4 |
+| **Total** | | **427** |
+
+### Conclusion
+
+| Plan | Instructions |
+|---|---|
+| A : canonique (produits cartésiens) | 58 304 |
+| B : jointures puis sélections | 3 025 |
+| **C : sélections descendues, Vol ⋈ Avion d'abord** | **405** |
+| D : sélections descendues, Avion ⋈ Modèle d'abord | 427 |
+
+Le **plan C** est le plan optimisé : il fait environ 144 fois moins d'instructions que le plan canonique et 7,5 fois moins que le plan B. Il applique les deux règles d'optimisation vues en cours :
+
+1. **Descendre les sélections** le plus bas possible dans l'arbre. Filtrer `Vol` (53 → 7 lignes) et `Modèle` (12 → 4 lignes) *avant* de joindre réduit fortement la taille des relations comparées.
+2. **Commencer par la jointure qui produit le moins de lignes.** Le plan D descend aussi les sélections, mais sa première jointure `Avion ⋈ σ(Modèle)` produit 26 lignes, contre 7 pour `σ(Vol) ⋈ Avion` dans le plan C. Sa seconde jointure coûte donc 7 × 26 = 182 au lieu de 7 × 4 = 28.
+
+On pourrait aussi descendre les projections (ne garder que les colonnes utiles avant chaque jointure). Cela réduit la mémoire utilisée, mais pas le nombre de lignes comparées.
