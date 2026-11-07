@@ -111,7 +111,7 @@ Effectue = (#Numéro_de_vol. #Matricule. #Passeport);
 Voyage = (#Code_IATA. #Numéro_de_vol, Role vARcHAR(50));
 
 PROMPT Partie 3 Insertion :
-Contexte : projet MERISE pour une compagnie aérienne inspirée d'Air France, Emirates et LATAM. La base AeroportBD est déjà créée par le fichier 1_création_projet.sql, dont voici le script : 
+Contexte : projet MERISE pour une compagnie aérienne inspirée d'Air France, Emirates et LATAM. La base AeroportBD est déjà créée par le fichier 1_création_projet.sql, en s'appuyant sur le script MPD (fourni ci-joint) 
 
 Tâche : génère un fichier 3_insertion_projet.sql qui remplit toutes les tables avec un volume conséquent de données réalistes, puis vérifie qu'il s'importe sans erreur dans MySQL/MariaDB.
 
