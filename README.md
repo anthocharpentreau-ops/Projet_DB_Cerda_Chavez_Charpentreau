@@ -85,3 +85,25 @@ RÉPONSE CLAUDE (IA):
 IMAGE MCD:
 <img width="1387" height="663" alt="Capture d’écran 2026-09-29 à 11 49 21" src="https://github.com/user-attachments/assets/38ac54c8-53b6-40aa-be85-a31693505c57" />
 
+IMAGE MLD :
+<img width="2690" height="1248" alt="image" src="https://github.com/user-attachments/assets/9aa26560-7586-487a-b2ae-12af5b11bd10" />
+
+MLD textuel :
+Equipage = (Matricule VARCHAR(50), Numero_de_licence_du_pilote VARCHAR(50), Nom_equipage VARCHAR/50), Prenom_Equipage VARCHAR(50), Fonction VARCHAR/50), #Matricule_ 1);
+
+Passager = （Passeport vARCHAR5o），Nom_passager vARCHAREO）， Prenom_passager （ARCHAR50.）；
+Ville = (code_postaliN, nom_ville VARCHAR/50), Pays TExT, Fuseau _horaire TExT);
+
+Modèle = (nom_modèle VARCHAR/50), nombre_de_siège INT);
+
+
+Billet = (num_billet VARCHAR(50), Code_de_reservation VARCHAR50), Clase_VARCHAR/50), numero_de_siège VARCHAR/50), embarqué VARCHAR(50), #Passeport);
+Avion = (Immatriculation_d _avion VARCHAR50), Etat vARCHAR/50), #nom_modele);
+
+Aeroport = (Code_IATA снаяз), NomvARCHARso) #code_postat);
+
+Vol = (Numéro de VOlVARCHARSO), Date
+depart_prevue DATETIME, Date_d_arrivé_prevue DATETIME, Date_depart_reelle DATETINE, Date_d_arrive_reelle DATETIME, Statut VARCHAR(50), Motif_du_retard VARCHAR(50),#Immatriculation_d_avion);
+Effectue = (#Numéro_de_vol. #Matricule. #Passeport);
+Voyage = (#Code_IATA. #Numéro_de_vol, Role vARcHAR(50));
+
