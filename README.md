@@ -110,3 +110,35 @@ Effectue = (#Numéro_de_vol. #Matricule. #Passeport);
 
 Voyage = (#Code_IATA. #Numéro_de_vol, Role vARcHAR(50));
 
+PROMPT Partie 3 Insertion :
+Contexte : projet MERISE pour une compagnie aérienne inspirée d'Air France, Emirates et LATAM. La base AeroportBD est déjà créée par le fichier 1_création_projet.sql, dont voici le script : 
+
+Tâche : génère un fichier 3_insertion_projet.sql qui remplit toutes les tables avec un volume conséquent de données réalistes, puis vérifie qu'il s'importe sans erreur dans MySQL/MariaDB.
+
+Format du fichier :
+- Uniquement des INSERT : ni DROP, ni CREATE DATABASE, ni CREATE TABLE.
+- Le fichier commence par USE AeroportBD; et SET NAMES utf8mb4;.
+- Les tables sont remplies dans l'ordre des clés étrangères. Pour une clé auto-référencée NOT NULL, insère d'abord une ligne racine qui se référence elle-même.
+- Ajoute un commentaire en tête de chaque bloc, avec le nombre de lignes.
+
+Données réelles quand c'est possible :
+- Vrais aéroports, codes IATA, villes et pays.
+- Fuseaux horaires au format UTC±HH:MM (décalage standard, hors heure d'été).
+- Vrais modèles d'avions avec leur capacité typique en sièges.
+- Immatriculations et numéros de vol au format réel des trois compagnies.
+- Préfixes réels des numéros de billet.
+
+Données fictives mais vraisemblables pour tout le reste : personnes, passeports (format selon la nationalité), licences, réservations, sièges, horaires et incidents d'exploitation.
+
+Volumes visés : environ 25 villes et aéroports, 12 modèles, 40 avions, 100 membres d'équipage, 350 passagers, 50 vols, 450 billets.
+
+Cohérence à respecter :
+- Les heures sont en heure locale de chaque aéroport. Les arrivées sont calculées à partir de la durée de vol et du décalage horaire réellement en vigueur ce jour-là.
+- Un avion ne fait jamais deux vols en même temps et repart de l'aéroport où il a atterri.
+- Un membre d'équipage ne fait jamais deux vols qui se chevauchent.
+- Chaque vol a au minimum un commandant, un copilote, un chef de cabine et du personnel de cabine.
+- Les vols long-courriers ont un copilote de renfort.
+- Les classes et sièges sont compatibles avec le modèle d'avion, et un siège n'est attribué qu'une fois par vol.
+- Les avions retirés ne volent pas.
+- Prévois quelques vols retardés et annulés, avec leur motif.
+
