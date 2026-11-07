@@ -89,6 +89,7 @@ IMAGE MLD :
 <img width="2690" height="1248" alt="image" src="https://github.com/user-attachments/assets/9aa26560-7586-487a-b2ae-12af5b11bd10" />
 
 MLD textuel :
+
 Equipage = (Matricule VARCHAR(50), Numero_de_licence_du_pilote VARCHAR(50), Nom_equipage VARCHAR/50), Prenom_Equipage VARCHAR(50), Fonction VARCHAR/50), #Matricule_ 1);
 
 Passager = （Passeport vARCHAR5o），Nom_passager vARCHAREO）， Prenom_passager （ARCHAR50.）；
