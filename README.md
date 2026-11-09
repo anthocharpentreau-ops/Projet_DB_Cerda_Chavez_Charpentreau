@@ -1,4 +1,10 @@
-PROMT UTILISÉ:  
+# Projet BD : compagnie aérienne (AeroportBD)  
+- Walter Cerda Chavez
+- Anthony Charpentreau
+
+## Étape 1 : 
+
+### PROMT UTILISÉ:  
 Tu travailles dans le domaine de l’aviation. Ton entreprise a comme activité de transporter des personnes en avion d’un aéroport à un autre. C’est une compagnie aérienne comme Air France, Latam Airlines ou Fly Emirates. On veut collecter des données comme le numéro d’avion, numéro du vol, modèle de l’avion, nombre de passagers, aéroport de départ et d’arrivée, nom des pilotes, date et heure de départ et d’arrivée à l’heure local, temps de vol, etc… Inspire-toi des sites web des compagnies aérienne Air France, Latam Airlines et Fly Emirates.
 
 Ta compagnie aérienne veut appliquer MERISE pour concevoir un système d'information. Tu es chargé de la partie analyse, c’est-à-dire de collecter les besoins auprès de l’entreprise. Elle a fait appel à un étudiant en ingénierie informatique pour réaliser ce projet, tu dois lui fournir les informations nécessaires pour qu’il applique ensuite lui-même les étapes suivantes de conception et développement de la base de données. 
@@ -8,10 +14,10 @@ D’abord, établis les règles de gestions des données de ta compagnie, sous l
 Ensuite, à partir de ces règles, fournis un dictionnaire de données brutes avec les colonnes suivantes, regroupées dans un tableau : signification de la donnée, type, taille en nombre de caractères ou de chiffres. Il doit y avoir entre 25 et 35 données. Il sert à fournir des informations supplémentaires sur chaque donnée (taille et type) mais sans a priori sur comment les données vont être modélisées ensuite.
 Fournis donc les règles de gestion et le dictionnaire de données.
 
-RÉPONSE CLAUDE (IA):
-# Analyse des besoins : compagnie aérienne (démarche MERISE)
+### RÉPONSE CLAUDE (IA):
+#### Analyse des besoins : compagnie aérienne (démarche MERISE)
 
-## Partie 1 : Règles de gestion
+### Règles de gestion
 
 **Flotte et avions**
 - Notre compagnie possède une flotte d'avions. Chaque avion est identifié par son immatriculation (par exemple F-GKXA), qui ne change jamais tant qu'il est dans la compagnie.
@@ -43,7 +49,7 @@ RÉPONSE CLAUDE (IA):
 - Pour chaque voyageur et chaque opération de vol réservée, la compagnie émet un billet portant un numéro unique. Le billet précise la classe de voyage : Economy, Premium Economy, Business ou First. Selon le modèle d'avion, toutes les classes ne sont pas proposées.
 - À l'enregistrement, un siège (par exemple 34K) est attribué au passager. Deux passagers ne peuvent pas avoir le même siège sur une même opération de vol.
 
-## Partie 2 : Dictionnaire de données brutes (30 données)
+### Dictionnaire de données brutes (30 données)
 
 | N° | Signification de la donnée | Type | Taille |
 |---|---|---|---|
@@ -82,35 +88,31 @@ RÉPONSE CLAUDE (IA):
 - La durée de vol et le nombre de passagers embarqués apparaissent ici parce que la compagnie souhaite les consulter. Ils peuvent se déduire d'autres données (heures réelles et fuseaux, billets enregistrés). À toi de décider, lors de la modélisation, de les conserver ou de les calculer.
 - Les règles de gestion et le dictionnaire couvrent le même périmètre. Si tu as besoin d'informations supplémentaires, n'hésite pas à me les demander.
 
-IMAGE MCD:
+## Étape 2 : 
+
+### IMAGE MCD:
 <img width="1387" height="663" alt="Capture d’écran 2026-09-29 à 11 49 21" src="https://github.com/user-attachments/assets/38ac54c8-53b6-40aa-be85-a31693505c57" />
 
-IMAGE MLD :
+## Étape 3 :
+
+### IMAGE MLD :
 <img width="2690" height="1248" alt="image" src="https://github.com/user-attachments/assets/9aa26560-7586-487a-b2ae-12af5b11bd10" />
 
 MLD textuel :
 
-Equipage = (Matricule VARCHAR(50), Numero_de_licence_du_pilote VARCHAR(50), Nom_equipage VARCHAR/50), Prenom_Equipage VARCHAR(50), Fonction VARCHAR/50), #Matricule_ 1);
+- Ville = (**code_postal** INT, nom_ville VARCHAR(50), Pays TEXT, Fuseau_horaire TEXT)
+- Aeroport = (**Code_IATA** CHAR(3), Nom VARCHAR(50), #code_postal)
+- Modèle = (**nom_modèle** VARCHAR(50), nombre_de_siège INT)
+- Avion = (**Immatriculation_d_avion** VARCHAR(50), Etat VARCHAR(50), #nom_modèle)
+- Vol = (**Numéro_de_vol** VARCHAR(50), Date_depart_prevue DATETIME, Date_d_arrivé_prevue DATETIME, Date_depart_reelle DATETIME, Date_d_arrive_reelle DATETIME, Statut VARCHAR(50), Motif_du_retard VARCHAR(50), #Immatriculation_d_avion)
+- Voyage = (**#Code_IATA, #Numéro_de_vol**, Role VARCHAR(50))
+- Equipage = (**Matricule** VARCHAR(50), Numero_de_licence_du_pilote VARCHAR(50), Nom_equipage VARCHAR(50), Prenom_Equipage VARCHAR(50), Fonction VARCHAR(50), #Matricule_1)
+- Passager = (**Passeport** VARCHAR(50), Nom_passager VARCHAR(50), Prenom_passager VARCHAR(50))
+- Billet = (**num_billet** VARCHAR(50), code_de_reservation VARCHAR(50), clase_ VARCHAR(50), numero_de_siège VARCHAR(50), embarqué VARCHAR(50), #Passeport)
+- Effectue = (**#Numéro_de_vol, #Matricule, #Passeport**)
 
-Passager = （Passeport vARCHAR5o），Nom_passager vARCHAREO）， Prenom_passager （ARCHAR50.）；
-Ville = (code_postaliN, nom_ville VARCHAR/50), Pays TExT, Fuseau _horaire TExT);
-
-Modèle = (nom_modèle VARCHAR/50), nombre_de_siège INT);
-
-
-Billet = (num_billet VARCHAR(50), Code_de_reservation VARCHAR50), Clase_VARCHAR/50), numero_de_siège VARCHAR/50), embarqué VARCHAR(50), #Passeport);
-Avion = (Immatriculation_d _avion VARCHAR50), Etat vARCHAR/50), #nom_modele);
-
-Aeroport = (Code_IATA снаяз), NomvARCHARso) #code_postat);
-
-Vol = (Numéro de VOlVARCHARSO), Date
-depart_prevue DATETIME, Date_d_arrivé_prevue DATETIME, Date_depart_reelle DATETINE, Date_d_arrive_reelle DATETIME, Statut VARCHAR(50), Motif_du_retard VARCHAR(50),#Immatriculation_d_avion);
-
-Effectue = (#Numéro_de_vol. #Matricule. #Passeport);
-
-Voyage = (#Code_IATA. #Numéro_de_vol, Role vARcHAR(50));
-
-PROMPT Partie 3 Insertion :
+## Étape 4 :
+### PROMPT Insertion des données :
 Contexte : projet MERISE pour une compagnie aérienne inspirée d'Air France, Emirates et LATAM. La base AeroportBD est déjà créée par le fichier 1_création_projet.sql, en s'appuyant sur le script MPD (fourni ci-joint) 
 
 Tâche : génère un fichier 3_insertion_projet.sql qui remplit toutes les tables avec un volume conséquent de données réalistes, puis vérifie qu'il s'importe sans erreur dans MySQL/MariaDB.
@@ -142,7 +144,9 @@ Cohérence à respecter :
 - Les avions retirés ne volent pas.
 - Prévois quelques vols retardés et annulés, avec leur motif.
 
-## Scénario d'utilisation
+## Étape 5 :
+
+### Scénario d'utilisation
 
 **Qui utilise la base ?** La responsable des opérations de la compagnie aérienne.
 
@@ -192,9 +196,9 @@ Elle extrait les données suivantes, dans l'ordre des requêtes du fichier `4_in
 
 Enfin, pour la maintenance, elle cherche **les avions de plus de 250 sièges qui ont eu un vol retardé**. C'est la requête dont les plans d'exécution sont étudiés ci-dessous.
 
-## Étude des plans d'exécution
+### Étude des plans d'exécution
 
-### Requête étudiée
+#### Requête étudiée
 
 > Immatriculation et modèle des avions **gros-porteurs (plus de 250 sièges)** ayant effectué au moins un **vol retardé**.
 
@@ -202,7 +206,7 @@ En algèbre relationnelle, elle utilise trois opérateurs différents : la **sé
 
 π<sub>Immatriculation, nom_modèle</sub> ( σ<sub>Statut='Retardé' ∧ nombre_de_siège>250</sub> ( Vol ⋈ Avion ⋈ Modèle ) )
 
-### Cardinalités (mesurées sur la base remplie)
+#### Cardinalités (mesurées sur la base remplie)
 
 | Relation / résultat intermédiaire | Lignes |
 |---|---|
@@ -217,13 +221,13 @@ En algèbre relationnelle, elle utilise trois opérateurs différents : la **sé
 | σ<sub>Statut</sub>(Vol) ⋈ Avion | 7 |
 | Résultat final | 4 |
 
-### Modèle de coût utilisé
+#### Modèle de coût utilisé
 
 - **Sélection** σ sur une relation de *n* lignes : *n* instructions (chaque ligne est testée une fois).
 - **Produit cartésien / jointure** par boucles imbriquées entre *n* et *m* lignes : *n × m* instructions (chaque couple est comparé).
 - **Projection** π sur *n* lignes : *n* instructions.
 
-### Plan A : plan canonique (produits cartésiens, puis sélection, puis projection)
+#### Plan A : plan canonique (produits cartésiens, puis sélection, puis projection)
 
 C'est la traduction directe de la requête : on combine toutes les tables, puis on filtre.
 <img width="894" height="1174" alt="image" src="https://github.com/user-attachments/assets/4acdea33-75f4-446b-8305-278c183453a9" />
@@ -236,7 +240,7 @@ C'est la traduction directe de la requête : on combine toutes les tables, puis 
 | π | 4 | 4 |
 | **Total** | | **58 304** |
 
-### Plan B : jointures d'abord, sélections ensuite
+#### Plan B : jointures d'abord, sélections ensuite
 
 <img width="894" height="1174" alt="image" src="https://github.com/user-attachments/assets/93b56d97-24e8-41e2-8ee8-b7f95ad3fe4f" />
 
@@ -248,7 +252,7 @@ C'est la traduction directe de la requête : on combine toutes les tables, puis 
 | π | 4 | 4 |
 | **Total** | | **3 025** |
 
-### Plan C : sélections descendues au plus près des tables (Vol ⋈ Avion d'abord)
+#### Plan C : sélections descendues au plus près des tables (Vol ⋈ Avion d'abord)
 
 <img width="1308" height="1274" alt="image" src="https://github.com/user-attachments/assets/64f03a95-a143-4c49-969b-0ca587f5f206" />
 
@@ -261,7 +265,7 @@ C'est la traduction directe de la requête : on combine toutes les tables, puis 
 | π | 4 | 4 |
 | **Total** | | **405** |
 
-### Plan D : sélections descendues, mais Avion ⋈ Modèle d'abord
+#### Plan D : sélections descendues, mais Avion ⋈ Modèle d'abord
 
 <img width="1308" height="1274" alt="image" src="https://github.com/user-attachments/assets/374d3840-ab6e-41ed-8214-c3d6fcf525ca" />
 
@@ -274,7 +278,7 @@ C'est la traduction directe de la requête : on combine toutes les tables, puis 
 | π | 4 | 4 |
 | **Total** | | **427** |
 
-### Conclusion
+#### Conclusion
 
 | Plan | Instructions |
 |---|---|
