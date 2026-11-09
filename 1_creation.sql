@@ -1,7 +1,7 @@
 
 DROP DATABASE IF EXISTS AeroportBD;
 CREATE DATABASE AeroportBD;
-USE AeroportBd;
+USE AeroportBD;
 
 CREATE TABLE Equipage(
    Matricule VARCHAR(50),
@@ -13,6 +13,8 @@ CREATE TABLE Equipage(
    PRIMARY KEY(Matricule),
    UNIQUE(Numero_de_licence_du_pilote),
    FOREIGN KEY(Matricule_1) REFERENCES Equipage(Matricule)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 CREATE TABLE Passager(
@@ -46,6 +48,8 @@ CREATE TABLE Billet(
    PRIMARY KEY(num_billet),
    UNIQUE(code_de_reservation),
    FOREIGN KEY(Passeport) REFERENCES Passager(Passeport)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 CREATE TABLE Avion(
@@ -54,6 +58,8 @@ CREATE TABLE Avion(
    nom_modèle VARCHAR(50) NOT NULL,
    PRIMARY KEY(Immatriculation_d_avion),
    FOREIGN KEY(nom_modèle) REFERENCES Modèle(nom_modèle)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 CREATE TABLE Aeroport(
@@ -63,6 +69,8 @@ CREATE TABLE Aeroport(
    PRIMARY KEY(Code_IATA),
    UNIQUE(Nom),
    FOREIGN KEY(code_postal) REFERENCES Ville(code_postal)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 CREATE TABLE Vol(
@@ -76,6 +84,8 @@ CREATE TABLE Vol(
    Immatriculation_d_avion VARCHAR(50) NOT NULL,
    PRIMARY KEY(Numéro_de_vol),
    FOREIGN KEY(Immatriculation_d_avion) REFERENCES Avion(Immatriculation_d_avion)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 CREATE TABLE Effectue(
@@ -83,9 +93,15 @@ CREATE TABLE Effectue(
    Matricule VARCHAR(50),
    Passeport VARCHAR(50),
    PRIMARY KEY(Numéro_de_vol, Matricule, Passeport),
-   FOREIGN KEY(Numéro_de_vol) REFERENCES Vol(Numéro_de_vol),
-   FOREIGN KEY(Matricule) REFERENCES Equipage(Matricule),
+   FOREIGN KEY(Numéro_de_vol) REFERENCES Vol(Numéro_de_vol)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+   FOREIGN KEY(Matricule) REFERENCES Equipage(Matricule)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
    FOREIGN KEY(Passeport) REFERENCES Passager(Passeport)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 CREATE TABLE Voyage(
@@ -93,6 +109,10 @@ CREATE TABLE Voyage(
    Numéro_de_vol VARCHAR(50),
    Role VARCHAR(50) NOT NULL,
    PRIMARY KEY(Code_IATA, Numéro_de_vol),
-   FOREIGN KEY(Code_IATA) REFERENCES Aeroport(Code_IATA),
+   FOREIGN KEY(Code_IATA) REFERENCES Aeroport(Code_IATA)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
    FOREIGN KEY(Numéro_de_vol) REFERENCES Vol(Numéro_de_vol)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
